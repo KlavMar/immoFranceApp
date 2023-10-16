@@ -684,10 +684,10 @@ def get_key_number(year,region_name,dep_name,cities_name) :
                 sym=""
             data.append(html.Div(id="metric",children=[
                 html.Div(children=[
-                    html.H3(children=liste_title.get(col),className="font-semibold text-2xl text-gray-700 p-3 m-2"),
-                    html.P(children='{:,.0f}'.format(df[col][0]).replace(","," ")+sym,className="font-semibold text-xl text-gray-700 p-3 m-2")
+                    html.H3(children=liste_title.get(col),className="text-xl p-2 font-bold text-gray-700"),
+                    html.P(children='{:,.0f}'.format(df[col][0]).replace(","," ")+sym,className="text-lg  p-2 font-bold ")
             ])
-            ],className="flex flex-col p-3 m-2 bg-white shadow-xl rounded-2xl w-full justify-center items-center")
+            ],className="font-semibold bg-white rounded-lg items-start justify-start flex flex-col p-2 m-2")
             )
 
     return data
@@ -1042,13 +1042,15 @@ def get_map_vente(year,region_name,dep_name,cities_name):
                             },
                            )
     get_templates(fig)
-    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0},height=800, coloraxis_colorbar=dict(title=''))
+    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0},height=800, coloraxis_colorbar=dict(
+    orientation='h',
+    xanchor='left',
+    x=0,
+    yanchor='top',
+    y=1.1,title="",len=0.5
+    ))
     
-    return html.Div(
-        id="",children=[
-            dcc.Graph(id="graph_map",figure=fig,className="")
-        ]
-    )
+    return dcc.Graph(id="graph_map",figure=fig,className="")
 
 
 
@@ -1121,7 +1123,14 @@ def get_view_map(year,region_name,dep_name,detail_view,value_to_see):
                             
                             )
     get_templates(fig)
-    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0},height=800, coloraxis_colorbar=dict(title=''))
+    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0},height=800,
+    coloraxis_colorbar=dict(
+    orientation='h',
+    xanchor='left',
+    x=0,
+    yanchor='top',
+    y=1.1,title="",len=0.5
+    ))
     fig.update_layout(legend=dict(xanchor="left",x=0.9,yanchor="top",y=0.8,orientation="h"))
     
     return html.Div(
@@ -1130,11 +1139,8 @@ def get_view_map(year,region_name,dep_name,detail_view,value_to_see):
             dcc.Graph(id="view_map",figure=fig)
         ]
     )
-
-
-app.layout=html.Div([
-
-    html.Div(
+def get_text():
+       return  html.Div(
                 children=[
                     html.H1(children="Données de valeur foncière depuis 2018",className="text-6xl text-gray-700 font-bold p-3 m-2 "),
                     html.Div(
@@ -1164,6 +1170,12 @@ app.layout=html.Div([
                     )
                 ],className="bg-white rounded-2xl p-5 m-2 shadow-lg"
             ),
+
+app.layout=html.Div([
+
+
+html.Div(id="container",children=[
+    html.Div(id="container_left",children=[
     html.Div(
         id="filter_menu",
     
@@ -1174,10 +1186,10 @@ app.layout=html.Div([
                         id="year",
                         options=[{"label":year,"value":year} for year in range(2018,2023)],
                         value=2022,
-                       className="p-3 m-2 rounded-lg ",
+                     className="p-2 font-bold text-xl  m-2 border-none outline-none ",
                         
                     ),
-                    ],className="w-full xl: w-1/5"
+                           ],className="col-span-12  bg-white rounded-lg "
                 ),
                   html.Div(children=[
                            dcc.Dropdown(
@@ -1185,10 +1197,10 @@ app.layout=html.Div([
                     options=[{"label":reg, "value":reg }for reg in sorted(region_name)],
                     value="Nouvelle-Aquitaine",
                     placeholder="region",
-                   className="p-3 m-2 rounded-lg ",
+                  className="p-2 font-bold text-xl  m-2 ",
                    # style={"min-width":"18vw","max-width":"90vw","border-radius":"0.5em"}
                     ),
-                    ],className="w-full xl: w-1/5"
+                            ],className="col-span-12  bg-white rounded-lg "
                 ),
                    html.Div(children=[
                             dcc.Dropdown(
@@ -1196,10 +1208,10 @@ app.layout=html.Div([
                     options="",
                     value=None,
                         placeholder="départements",
-                  className="p-3 m-2 rounded-lg ",
+                  className="p-2 font-bold text-xl  m-2 ",
                     
                     ),
-                    ],className="w-full xl: w-1/5"
+                             ],className="col-span-12  bg-white rounded-lg "
                 ),
                    html.Div(children=[
                         dcc.Dropdown(
@@ -1207,48 +1219,28 @@ app.layout=html.Div([
                     options="",
                     value=None,
                     placeholder="villes",
-                    className="p-3 m-2 rounded-lg ",
+                    className="p-2 font-bold text-xl  m-2 ",
                     
                     ),
                    
-                    ],className="w-full xl: w-1/5"
+                ],className="col-span-12  bg-white rounded-lg "
                 ),
-                #  html.Div(children=[
-                #         dcc.Dropdown(
-                #     id="street",
-                #     options="",
-                #     value=None,
-                #     placeholder="rue",
-                #     className="p-3 m-2 rounded-lg ",
-                    
-                #     ),
-                   
-                #     ],className="w-full xl: w-1/5"
-                # ),
+                 html.Div(id="key_number",children=[],className="col-span-12"),
+                 html.Div(children=get_text(),className="col-span-12")
                 
-            ],className="p-3 m-2 flex flex-col xl:flex-row flex-nowrap w-full justify-between items-center bg-white rounded-2xl  "
+            ],className="p-2 m-2 grid grid-cols-12 gap-6 "
         ),
         ## message markdonw ###
      
-        ## key numbe    r ###
-            html.Div(
-                children=[
-                html.Div(children=[
-                    html.H3(children="Chiffres clés",className="text-4xl text-gray-700 font-bold p-3 m-2 "),
-                    html.Div(id="key_number",children=[],className="flex flex-col xl:flex-row flex-nowrap w-full justify-between"),
-                ])
-]),
                 
-
+],className="col-span-3 bg-gradient-to-br from-blue-900 via-blue-500 to-blue-100"),
+html.Div(id="container_right", children=[
         ## graph ##
         html.Div(
-            id="",
             children=[
- html.H3(children="Evolution depuis 2018",className="text-4xl text-gray-700 font-bold p-3 m-2 "),
          html.Div(id="",children=[
             
             html.Div(children=[
-                html.H4(children="Calcul d'Agrégat",className="text-2xl text-gray-700 font-bold p-3 m-2 "),
                 html.Div([
                 dcc.Dropdown(
                     id="control",
@@ -1265,9 +1257,9 @@ app.layout=html.Div([
                     ),
                ])
           
-            ],className="w-full xl: w-1/4"),
+           ],className="col-span-12 xl:col-span-3"), 
             html.Div(id="",children=[
-                html.H4(children="Choix du type de local",className="text-2xl text-gray-700 font-bold p-3 m-2 "),
+             
                 html.Div(
                     children=[
                             dcc.Dropdown(
@@ -1279,18 +1271,17 @@ app.layout=html.Div([
                                 },
                                     
                                     multi=True,
-                                value="",
+                                value=['Maison','Appartement'],
                                 className="p-3 m-2 rounded-lg ",
                                 ),
                ])
           
-            ],className="w-full xl: w-1/4"),
+          ],className="col-span-12 xl:col-span-3"), 
             html.Div(id="",children=[
-                    html.H4(children="Choix du regroupement",className="text-2xl text-gray-700 font-bold p-3 m-2 "),
                     html.Div([
                                      dcc.Dropdown(
                                 id="group_type",
-                                placeholder="choix de l'affichage",
+                                placeholder="choix de la timeline",
                                 options={
                                         'year': 'année',
                                         'month': 'mois',
@@ -1303,9 +1294,9 @@ app.layout=html.Div([
                                 ),
                ])
           
-            ],className="w-full xl: w-1/4"),
+     ],className="col-span-12 xl:col-span-3"), 
             html.Div(id="",children=[
-                     html.H4(children="Choix du type d'affichage",className="text-2xl text-gray-700 font-bold p-3 m-2 "),
+               
                      html.Div([
                                      dcc.Dropdown(
                         id="value_step",
@@ -1313,33 +1304,31 @@ app.layout=html.Div([
                             "percent":"évolution en pourcentage",
                             "absolute":"valeur"
                         },
+                        value='absolute',
                         className="p-3 m-2 rounded-lg ",
                       
                     )
                          
                ])
           
-            ],className="w-full xl: w-1/4"),
-           
-           
-                
-          
-                          
-          
-       ],className="p-3 m-2 flex flex-col xl:flex-row flex-nowrap w-full justify-around items-center bg-white rounded-2xl"),
-                html.Div(id="graph_evol_number",children=[]),
-                html.Div(id="graph_evol_transaction",children=[]),
+            ],className="col-span-12 xl:col-span-3"), 
+       ],className="p-2 m-2 grid grid-cols-12 gap-6"),
+
+       html.Div(id="container_graph",children=[
+                html.Div(id="graph_evol_number",children=[],className="col-span-12 xl:col-span-12"),
+                html.Div(id="graph_evol_transaction",children=[],className="col-span-12 xl:col-span-12"),
+       ],className="grid grid-cols-12 gap-4")
+
                 
             ]
            
         ),
 
         ## map ###
-
+       html.Div(id="container_map",children=[
             html.Div(
                 id="map_view_container",
                 children=[
-                   html.H3(children="Cartographies",className="text-4xl text-gray-700 font-bold p-3 m-2 "),
                    html.Div(
                         id="",
                         children=[
@@ -1378,24 +1367,27 @@ app.layout=html.Div([
               
                         ],className="p-3 m-2 flex flex-col xl:flex-row  w-full justify-around items-center bg-white rounded-2xl"
                     ),
+            ],className="col-span-12"
+            ),
                    html.Div(
                        id="map_view_detail",
-                       children=[]
+                       children=[],className="col-span-12 xl:col-span-6"
                    ),
-                ]
-            ),
-           html.Div(
-            children=[
-                html.H3(children="Cartes des ventes",className="text-4xl text-gray-700 font-bold p-3 m-2 "),
-                html.P(children="Pour des raisons techniques et de rapidité les résultats sont plafonnés à 50 000 éléments"
-                       ,className="text-lg p-3 m-2 font-semibold"),
-                html.P(children="L'échelle de couleur représente le prix au m2 moyen, la taille du cercle lui correspond à la valeur foncière"
-                       ,className="text-lg p-3 m-2 font-semibold")
-            ]
-        ),
-    
-   
-             html.Div(id="map",children=[])
 
+           #html.Div(
+            # children=[
+            #     html.H3(children="Cartes des ventes",className="text-4xl text-gray-700 font-bold p-3 m-2 "),
+            #     html.P(children="Pour des raisons techniques et de rapidité les résultats sont plafonnés à 50 000 éléments"
+            #            ,className="text-lg p-3 m-2 font-semibold"),
+            #     html.P(children="L'échelle de couleur représente le prix au m2 moyen, la taille du cercle lui correspond à la valeur foncière"
+            #            ,className="text-lg p-3 m-2 font-semibold")
+            # ]
+            # ),
+             html.Div(id="map",children=[],className="col-span-12 xl:col-span-6")
+    
+       ],className="grid grid-cols-12 gap-4")
+          
+],className="col-span-9")
+],className="grid grid-cols-12 gap-6")
 ],className="bg-gray-100 p-5 m-0 h-screen overflow-y-auto overflow-x-hidden")
     
